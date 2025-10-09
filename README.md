@@ -11,8 +11,8 @@ Aplikasi ini terintegrasi dengan model Machine Learning, database, dan website f
 
 ##  Struktur Folder
 .
-├── Backend/                      # API & Model siap pakai
-│   ├── requirements.txt          # Dependency Python
+├── Backend/                      
+│   ├── requirements.txt          
 │   ├── model_rekomendasi_pupuk.pkl
 │   ├── xgboost_model_Init_Capital_RpHa.pkl
 │   ├── xgboost_model_Maintenance_Cost_RpHa.pkl
