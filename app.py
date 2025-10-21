@@ -361,151 +361,208 @@ else:
 
 #  BACAAN & TIPS PER KOMODITAS
 
+
 st.divider()
 st.subheader("📖 Bacaan & Tips untuk Petani Hebat")
 
 tabs = st.tabs(["🌾 Padi", "🌽 Jagung", "🍬 Tebu", "🧅 Bawang Merah", "🌶️ Cabai Rawit"])
 
-# ======================================================
+
 # 🌾 PADI
-# ======================================================
+
 with tabs[0]:
+    st.markdown("## 🌾 Tips Budidaya Padi")
     st.markdown("""
-    ### 🌾 Tips Padi
-    - Gunakan varietas unggul seperti **Inpari 32** atau **Ciherang Sub 1** tahan genangan.  
-    - Terapkan **irigasi berselang (AWD)** untuk efisiensi air hingga 30%.  
-    - Gunakan **pemupukan berimbang N:P:K = 5:3:2** dan tambahkan bahan organik.  
-    - Terapkan sistem **jajar legowo 2:1** untuk meningkatkan produktivitas.  
-    - Gunakan **tanaman refugia** sebagai pengendali hama alami.
+    - Gunakan varietas unggul tahan penyakit seperti **Inpari 32**, **Ciherang Sub 1**.
+    - Terapkan **irigasi berselang (AWD)** untuk efisiensi air hingga 30%.
+    - Gunakan **pupuk seimbang (N:P:K = 5:3:2)** dan bahan organik.
+    - Terapkan sistem **jajar legowo 2:1** untuk peningkatan hasil.
+    - Tanam tanaman **refugia** di tepi sawah untuk menarik musuh alami hama.
     """)
 
-    with st.expander("📘 Rahmawati, L., et al. (2022) — *Smart Irrigation in Rice Cultivation*"):
+    with st.expander("📗 Liu et al. (2024) – Effects of Long-Term Sustainable Inorganic Fertilization on Rice Productivity"):
         st.markdown("""
-        **Ringkasan:**  
-        Penelitian ini mengembangkan sistem irigasi cerdas berbasis sensor kelembaban tanah dan data cuaca.  
-        Metode AWD mampu menghemat air hingga 30% tanpa menurunkan hasil panen.
-        """)
-        st.link_button("🔗 Buka DOI", "https://doi.org/10.1016/j.agritech.2022.04.005")
+        **Ringkasan:**
+        - Pemupukan anorganik seimbang (NPK) secara jangka panjang menjaga kesuburan tanah.
+        - Penggunaan hanya N atau P menurunkan produktivitas karena gangguan mikroba tanah.
+        - Pupuk seimbang terbukti menjaga hasil padi dalam jangka 30 tahun percobaan.
 
-    with st.expander("📗 Syahputra, R., & Hidayati, N. (2023) — *Balanced Fertilization and Growth Efficiency of Rice*"):
+        **Implikasi Praktis:**
+        - Gunakan kombinasi pupuk N, P, dan K dalam dosis seimbang.
+        - Hindari hanya menambahkan nitrogen.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://www.mdpi.com/2073-4395/14/10/2311")
+
+    with st.expander("📘 Zhuang et al. (2022) – Optimized Fertilization Practices for Sustainable Rice Production"):
         st.markdown("""
-        **Ringkasan:**  
-        Pupuk seimbang N:P:K = 200:100:75 kg/ha meningkatkan hasil panen dan efisiensi hara hingga 15%.  
-        Disarankan untuk pemupukan berbasis analisis tanah.
-        """)
-        st.link_button("🔗 Buka DOI", "https://doi.org/10.21082/jti.v47n1.2023.35-46")
+        **Ringkasan:**
+        - Kombinasi pupuk organik dan anorganik meningkatkan efisiensi nitrogen 15–25%.
+        - Teknik slow-release fertilizer mengurangi kehilangan unsur hara dan polusi air.
+        - Biochar dan pupuk hayati mendukung produksi berkelanjutan.
 
-# ======================================================
+        **Implikasi Praktis:**
+        - Tambahkan bahan organik (kompos/biochar).
+        - Pertimbangkan penggunaan pupuk pelepasan lambat (slow-release).
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://link.springer.com/article/10.1007/s13593-022-00759-7")
+
+
+
 # 🌽 JAGUNG
-# ======================================================
+
 with tabs[1]:
+    st.markdown("## 🌽 Tips Budidaya Jagung")
     st.markdown("""
-    ### 🌽 Tips Jagung
-    - Gunakan varietas **Bima 20 URI** atau **NK 7328** yang tahan kekeringan.  
-    - Tanam di pH 5.5–6.8 dan lakukan pemupukan NPK 15-15-15 (200 kg/ha).  
-    - Pupuk susulan Urea 150 kg/ha umur 25 HST.  
-    - Kendalikan ulat grayak dengan agen hayati seperti *Trichogramma sp.*.
+    - Gunakan varietas **Bima 20 URI** atau **NK 7328** tahan kekeringan.
+    - Pertahankan pH tanah 5.5–6.8.
+    - Terapkan pemupukan **NPK 15-15-15 (200 kg/ha)** dan Urea susulan 150 kg/ha di umur 25 HST.
+    - Lakukan rotasi tanaman dengan kacang tanah untuk menambah N alami.
+    - Kendalikan ulat grayak menggunakan agen hayati *Trichogramma sp.*.
     """)
 
-    with st.expander("📘 Susanto, A., et al. (2023) — *Fertilization Efficiency and Growth in Maize*"):
+    with st.expander("📗 Ssemugenze et al. (2025) – Foliar Fertilizer for Maize Nutrient Efficiency"):
         st.markdown("""
-        **Ringkasan:**  
-        Efisiensi pupuk meningkat 15–20% dengan dosis berbasis curah hujan dan indeks kesuburan tanah.  
-        Penelitian dilakukan di lahan kering NTT dengan peningkatan hasil 1,2 ton/ha.
-        """)
-        st.link_button("🔗 Baca di Jurnal Agro IPB (SINTA 2)", "https://journal.ipb.ac.id/index.php/agro")
+        **Ringkasan:**
+        - Pemupukan daun (foliar) meningkatkan penyerapan N, P, K saat tanah miskin hara.
+        - Waktu aplikasi menentukan hasil panen optimal.
+        - Kombinasi foliar + pupuk tanah meningkatkan hasil hingga 15–20%.
 
-    with st.expander("📗 Dewi, M., & Arifin, Z. (2021) — *Optimasi Dosis Pupuk Jagung Berdasarkan Curah Hujan*"):
+        **Implikasi Praktis:**
+        - Gunakan pupuk foliar saat fase bunga/pengisian tongkol.
+        - Perhatikan waktu dan kondisi cuaca saat aplikasi.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://www.mdpi.com/2073-4395/15/1/176")
+
+    with st.expander("📘 Saputri et al. (2025) – Peran Amelioran dan Mikroba Tanah"):
         st.markdown("""
-        **Ringkasan:**  
-        Dosis pupuk adaptif berdasarkan pola curah hujan menghasilkan peningkatan produktivitas 18%.  
-        Model direkomendasikan untuk wilayah beriklim monsun.
-        """)
-        st.link_button("🔗 Buka DOI", "https://doi.org/10.24198/jtp.v24i1.36567")
+        **Ringkasan:**
+        - Mikroba tanah (Actinobacteria) + amelioran meningkatkan serapan hara.
+        - Efektif di tanah marginal/pasang surut dengan produktivitas naik hingga 8,4 ton/ha.
+        - Meningkatkan efisiensi pupuk dan kesehatan tanah.
 
-# ======================================================
+        **Implikasi Praktis:**
+        - Gunakan pupuk hayati atau mikroorganisme tanah.
+        - Tambahkan bahan pembenah tanah (amelioran) untuk lahan miskin hara.
+        """)
+        st.link_button("🔗 Buka Penelitian", "https://www.researchgate.net/publication/382031802_Yield_Response_and_Nutrient_Uptake_of_Shallots_by_Giving_Ameliorants_and_Actinobacteria")
+
+
+
 # 🍬 TEBU
-# ======================================================
+
 with tabs[2]:
+    st.markdown("## 🍬 Tips Budidaya Tebu")
     st.markdown("""
-    ### 🍬 Tips Tebu
-    - Gunakan varietas **PSJK 922** atau **BL-4** untuk rendemen tinggi.  
-    - Gunakan pupuk kandang 10 ton/ha + Urea 200 kg + SP36 100 kg + KCl 100 kg/ha.  
-    - Lakukan pembumbunan dan perempalan untuk batang seragam.  
-    - Kelola ratoon (tanaman ke-2) agar efisien.
+    - Gunakan varietas **PSJK 922** atau **BL-4** dengan rendemen tinggi.
+    - Gunakan **pupuk kandang 10 ton/ha + NPK seimbang**.
+    - Lakukan pembumbunan dan perempalan agar batang seragam.
+    - Pertahankan pH tanah 6.5–7.5.
+    - Manfaatkan sisa batang tebu (ratoon) untuk penanaman berikutnya.
     """)
 
-    with st.expander("📘 Priyono, H., & Nurcahyo, D. (2021) — *Optimizing Fertilizer Dosage on Sugarcane*"):
+    with st.expander("📗 Mirbakhsh & Zahed (2023) – Enhancing Phosphorus Uptake in Sugarcane"):
         st.markdown("""
-        **Ringkasan:**  
-        Kombinasi Urea 200 kg + SP36 100 kg + KCl 100 kg/ha menghasilkan rendemen 8,4%.  
-        Efisiensi pupuk meningkat 25% dibanding pola konvensional.
-        """)
-        st.link_button("🔗 Baca di Jurnal Teknologi Pertanian UGM", "https://journal.ugm.ac.id/jtp")
+        **Ringkasan:**
+        - Kombinasi asam humik + pupuk fosfor meningkatkan serapan P di tanah alkali.
+        - Aktivitas akar meningkat signifikan → hasil naik 10–15%.
+        - Peningkatan efisiensi pupuk fosfor hingga 25%.
 
-    with st.expander("📗 Kharisma, I., et al. (2022) — *Ratoon Crop Productivity in Sugarcane*"):
+        **Implikasi Praktis:**
+        - Campurkan bahan organik/humik dalam pupuk P.
+        - Uji pH tanah sebelum aplikasi fosfor.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://arxiv.org/abs/2309.03928")
+
+    with st.expander("📘 Xu et al. (2021) – Sugarcane Ratooning Ability"):
         st.markdown("""
-        **Ringkasan:**  
-        Pengelolaan ratoon (tanaman tebu ke-2) dengan pemangkasan adaptif meningkatkan hasil 20%.  
-        Studi internasional mendukung pemupukan berbasis sisa organik.
-        """)
-        st.link_button("🔗 Buka DOI", "https://doi.org/10.1007/s12355-022-01152-y")
+        **Ringkasan:**
+        - Tanaman ratoon (tanaman ke-2/3) dapat mengurangi kebutuhan pupuk 20–30%.
+        - Produktivitas bisa stabil dengan pengelolaan residu batang yang baik.
+        - Sistem ratoon meningkatkan efisiensi dan menekan biaya produksi.
 
-# ======================================================
+        **Implikasi Praktis:**
+        - Pertahankan sisa batang tebu untuk ratoon berikutnya.
+        - Kurangi pupuk di musim ke-2, optimalkan sisa biomassa.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://pmc.ncbi.nlm.nih.gov/articles/PMC8533141/")
+
+
+
 # 🧅 BAWANG MERAH
-# ======================================================
+
 with tabs[3]:
+    st.markdown("## 🧅 Tips Budidaya Bawang Merah")
     st.markdown("""
-    ### 🧅 Tips Bawang Merah
-    - Gunakan umbi benih 5–10 g dan jarak tanam 15x15 cm.  
-    - Terapkan mulsa plastik hitam perak untuk kelembaban tanah.  
-    - Pemupukan 4 tahap: 0, 10, 25, 40 HST.  
-    - Gunakan pestisida nabati (daun nimba, bawang putih).
+    - Gunakan umbi benih 5–10 g dengan jarak tanam 15×15 cm.
+    - Gunakan mulsa plastik untuk menjaga kelembapan.
+    - Pemupukan bertahap: 0, 10, 25, 40 HST.
+    - Gunakan pestisida nabati (bawang putih, daun nimba).
     """)
 
-    with st.expander("📘 Astuti, N., et al. (2024) — *Soil Fertility and Nutrient Uptake in Shallot Cultivation*"):
+    with st.expander("📗 Sitorus et al. (2025) – Optimizing Shallot Growth through NPK Variation and Density"):
         st.markdown("""
-        **Ringkasan:**  
-        Kombinasi pupuk organik + NPK meningkatkan penyerapan N dan K serta hasil 28%.  
-        Penelitian mendukung penggunaan pupuk organik padat lokal.
-        """)
-        st.link_button("🔗 Buka DOI", "https://doi.org/10.2503/horti.ind.2024.001")
+        **Ringkasan:**
+        - Dosis optimum: N = 126.85 kg/ha, P = 178.06 kg/ha, K = 95.25 kg/ha.
+        - Jarak tanam rapat (20×10 cm) meningkatkan hasil 84%.
+        - Interaksi positif antara dosis pupuk dan kerapatan tanam.
 
-    with st.expander("📗 Nuraini, S., & Maulana, F. (2022) — *Pemupukan Efisien pada Budidaya Bawang Merah*"):
+        **Implikasi Praktis:**
+        - Gunakan jarak tanam rapat + dosis pupuk optimal.
+        - Sesuaikan kebutuhan berdasarkan kesuburan tanah.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://jgiass.com/pdf-reader.php?file=Optimizing-Shallot-Growth-through-Variations-Fertilization-NPK-and--Plant-Density.pdf")
+
+    with st.expander("📘 Sariyoga et al. (2025) – Impact of Production Factor Utilization on Shallot Production"):
         st.markdown("""
-        **Ringkasan:**  
-        Pemupukan berbasis fase pertumbuhan menurunkan biaya 12% dan meningkatkan hasil 15%.  
-        Studi dilakukan di Brebes dengan sistem irigasi tetes.
-        """)
-        st.link_button("🔗 Baca di SINTA 2", "https://sinta.kemdikbud.go.id/journals/detail?id=2191")
+        **Ringkasan:**
+        - Elastisitas faktor: lahan (0.47), pupuk (0.23), benih (0.22).
+        - Peningkatan input berlebih tidak proporsional terhadap hasil.
+        - Efisiensi input penting untuk menjaga keuntungan.
 
-# ======================================================
+        **Implikasi Praktis:**
+        - Gunakan pupuk dan benih secara efisien, bukan berlebihan.
+        - Evaluasi efisiensi biaya setiap musim tanam.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://journals.nasspublishing.com/index.php/rwae/article/view/2366")
+
+
+
 # 🌶️ CABAI RAWIT
-# ======================================================
+
 with tabs[4]:
+    st.markdown("## 🌶️ Tips Budidaya Cabai Rawit")
     st.markdown("""
-    ### 🌶️ Tips Cabai Rawit
-    - Gunakan varietas tahan virus **Dewata F1** atau **Bara F1**.  
-    - Pangkas tunas bawah dan gunakan ajir bambu.  
-    - Gunakan pestisida nabati (neem oil, serai, tembakau).  
+    - Gunakan varietas tahan virus seperti **Dewata F1** atau **Bara F1**.
+    - Gunakan ajir bambu dan pemangkasan tunas bawah.
+    - Aplikasikan pestisida nabati (neem oil, tembakau, serai).
     - Panen saat 80% buah berwarna merah.
     """)
 
-    with st.expander("📘 Mulyana, D., et al. (2023) — *Integrated Pest Management in Chili Farming*"):
+    with st.expander("📗 Wilyus et al. (2022) – Integrated Pest Management on Chili Cultivation"):
         st.markdown("""
-        **Ringkasan:**  
-        Penggunaan *Integrated Pest Management (IPM)* berbasis bahan nabati menurunkan serangan hama 40%.  
-        Kombinasi neem oil dan rotasi tanaman terbukti paling efisien.
-        """)
-        st.link_button("🔗 Baca di Jurnal SINTA 2", "https://sinta.kemdikbud.go.id/journals/detail?id=3129")
+        **Ringkasan:**
+        - Model IPM (tanaman refugia + pagar jagung) menurunkan hama hingga 40%.
+        - Mengurangi ketergantungan pada pestisida kimia.
+        - Produksi meningkat dengan pendekatan ekologi.
 
-    with st.expander("📗 Pertiwi, S., & Rahadian, D. (2021) — *Nutrient Management and Productivity of Chili in Tropics*"):
-        st.markdown("""
-        **Ringkasan:**  
-        Kombinasi NPK 300:150:100 kg/ha + biofertilizer meningkatkan hasil 22%.  
-        Studi dilakukan di wilayah tropis lembab dengan intensitas hujan tinggi.
+        **Implikasi Praktis:**
+        - Terapkan IPM: gunakan refugia, tanaman pagar, dan pestisida alami.
+        - Lakukan monitoring hama secara rutin.
         """)
-        st.link_button("🔗 Buka DOI", "https://doi.org/10.17503/jtcs.2021.34")
+        st.link_button("🔗 Buka Jurnal", "https://jlsuboptimal.unsri.ac.id/index.php/jlso/article/view/579")
+
+    with st.expander("📘 Pertiwi & Rahadian (2021) – Nutrient Management and Productivity of Chili"):
+        st.markdown("""
+        **Ringkasan:**
+        - Kombinasi NPK 300:150:100 kg/ha + biofertilizer meningkatkan hasil 22%.
+        - Pupuk berimbang menjaga produktivitas tinggi di iklim lembab.
+        - Disarankan pemupukan bertahap berdasarkan fase pertumbuhan.
+
+        **Implikasi Praktis:**
+        - Gunakan pupuk berimbang dan biofertilizer.
+        - Atur dosis sesuai umur tanaman cabai.
+        """)
+        st.link_button("🔗 Buka Jurnal", "https://doi.org/10.17503/jtcs.2021.34")
 
 
 
@@ -514,5 +571,6 @@ with tabs[4]:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
