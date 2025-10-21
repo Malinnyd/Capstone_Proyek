@@ -1,0 +1,7 @@
+# Abaikan semua file model yang diunduh
+*.pkl
+*.h5
+
+# Abaikan environment Python (jika ada)
+.venv/
+__pycache__/
