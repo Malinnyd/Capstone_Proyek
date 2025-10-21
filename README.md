@@ -74,3 +74,5 @@ Bash
 
 streamlit run app.py
 Aplikasi akan otomatis terbuka di browser Anda. Pada saat pertama kali dijalankan, Anda akan melihat pesan "Mengunduh model..." di terminal/konsol. Ini adalah proses normal di mana aplikasi mengambil file .pkl dari AWS S3.
+
+P.S : Jika membutuhkan notebook dan datasetnya, Semuanya berada dalam folder Model_ML. Project ini dijalankan dengan menggunakan Google colab
