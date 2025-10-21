@@ -239,31 +239,11 @@ input_data_prediksi['Avg_Fertilizer_Price'] = (
 ) / 3
 
 
-# PROSES PREDIKSI & REKOMENDASI
-
-st.divider()
-if st.button("🚀 Buat Prediksi dan Rekomendasi", type="primary", use_container_width=True):
-  
-    if commodity == "- (Tidak ada data) -":
-        st.error("Silakan pilih komoditas yang valid.")
-    else:
-        with st.spinner("⏳ Model sedang menganalisis data..."):
-            # --- PREDIKSI HASIL PANEN & BIAYA ---
-            prod = models["production"].predict(input_data_prediksi)[0]
-            cap = models["capital"].predict(input_data_prediksi)[0]
-            maint = models["maintenance"].predict(input_data_prediksi)[0]
-
-            # --- REKOMENDASI PUPUK DENGAN MODEL BERBASIS KEMIRIPAN ---
-            hasil_rekom = models["recommender"].recommend(
-                commodity=commodity, province=province,
-                soil_ph=defaults["Soil_pH"], temp_c=defaults["Temp_C"]
-            )
-
     
         #  TAMPILKAN HASIL
     
-    st.divider()
-if st.button("🚀 Buat Prediksi dan Rekomendasi", type="primary", use_container_width=True):
+  
+if st.button("🚀 Buat Prediksi dan Rekomendasi", type="primary", use_container_width=True, key="tombol_prediksi"):
     if commodity == "- (Tidak ada data) -":
         st.error("Silakan pilih komoditas yang valid.")
     else:
@@ -644,6 +624,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
