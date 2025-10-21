@@ -564,6 +564,51 @@ with tabs[4]:
         """)
         st.link_button("🔗 Buka Jurnal", "https://doi.org/10.17503/jtcs.2021.34")
 
+# ======================================================
+# 🗣️ SECTION: FEEDBACK DARI PENGGUNA
+# ======================================================
+import datetime
+
+st.divider()
+st.subheader("🗣️ Beri Feedback Anda")
+
+# Simpan feedback ke session_state agar tidak hilang selama app aktif
+if "feedback_list" not in st.session_state:
+    st.session_state.feedback_list = []
+
+with st.form("feedback_form", clear_on_submit=True):
+    nama = st.text_input("Nama Anda")
+    rating = st.slider("Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
+    komentar = st.text_area("Tulis feedback atau saran Anda di sini...")
+
+    submitted = st.form_submit_button("Kirim Feedback")
+    if submitted:
+        if nama.strip() == "" or komentar.strip() == "":
+            st.warning("⚠️ Mohon isi nama dan komentar sebelum mengirim.")
+        else:
+            feedback_data = {
+                "nama": nama,
+                "rating": rating,
+                "komentar": komentar,
+                "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
+            }
+            st.session_state.feedback_list.append(feedback_data)
+            st.success("✅ Terima kasih! Feedback Anda berhasil dikirim.")
+
+
+#  TAMPILKAN SEMUA FEEDBACK
+
+if st.session_state.feedback_list:
+    st.divider()
+    st.subheader("💬 Umpan Balik dari Pengguna")
+
+    for fb in reversed(st.session_state.feedback_list):  # urutan terbaru di atas
+        with st.container():
+            st.markdown(f"**🧑 {fb['nama']}**  |  ⭐ {fb['rating']}/5  |  *{fb['tanggal']}*")
+            st.markdown(f"_{fb['komentar']}_")
+            st.markdown("---")
+else:
+    st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
 
 
 #  FOOTER
@@ -571,6 +616,7 @@ with tabs[4]:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
