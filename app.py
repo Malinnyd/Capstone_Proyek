@@ -262,6 +262,63 @@ if st.button("🚀 Buat Prediksi dan Rekomendasi", type="primary", use_container
     
         #  TAMPILKAN HASIL
     
+    st.divider()
+if st.button("🚀 Buat Prediksi dan Rekomendasi", type="primary", use_container_width=True):
+    if commodity == "- (Tidak ada data) -":
+        st.error("Silakan pilih komoditas yang valid.")
+    else:
+        with st.spinner("⏳ Model sedang menganalisis data..."):
+            
+            # ---  PREDIKSI HASIL PANEN 
+            prod = models["production"].predict(input_data_prediksi)[0]
+            
+            # ---  PREDIKSI BIAYA 
+            # cap = models["capital"].predict(input_data_prediksi)[0]     # <-- DIHAPUS
+            # maint = models["maintenance"].predict(input_data_prediksi)[0] # <-- DIHAPUS
+
+            # --- REKOMENDASI PUPUK ---
+            hasil_rekom = models["recommender"].recommend(
+                commodity=commodity, province=province,
+                soil_ph=defaults["Soil_pH"], temp_c=defaults["Temp_C"]
+            )
+            
+
+            # --- Definisi biaya dasar per hektar (Rp) ---
+            modal_awal_dict = {
+                "Pengolahan Lahan (bajak, garu)": 1500000,
+                "Pembelian Benih/Bibit Unggul": 800000,
+                "Pupuk Dasar (sebelum tanam)": 1000000,
+                "Sewa Lahan (jika menyewa)": 3000000,
+                "Peralatan Kecil (cangkul, semprotan, dll.)": 500000
+            }
+
+            perawatan_dict = {
+                "Pupuk Susulan (Urea, SP-36, KCl)": 1800000,
+                "Pestisida/Herbisida (pengendalian hama/gulma)": 800000,
+                "Tenaga Kerja (tanam, pemeliharaan, panen)": 4000000,
+                "Biaya Pengairan/Irigasi": 600000,
+                "Perbaikan Peralatan": 300000
+            }
+
+            # --- Logika skala ekonomi ---
+            if area <= 2:
+                scale_factor = 1.0
+            elif area <= 10:
+                scale_factor = 0.95
+            else:
+                scale_factor = 0.85 
+
+            # --- Hitung total biaya ---
+            total_modal_calc = sum(modal_awal_dict.values()) * area * scale_factor
+            total_rawat_calc = sum(perawatan_dict.values()) * area * scale_factor
+            total_all_calc = total_modal_calc + total_rawat_calc
+            
+            # Hitung biaya per hektar untuk caption
+            modal_per_ha_calc = sum(modal_awal_dict.values()) * scale_factor
+            rawat_per_ha_calc = sum(perawatan_dict.values()) * scale_factor
+            
+ 
+        #  TAMPILKAN HASIL (BAGIAN INI DIUBAH)
     
         st.success(" Analisis Selesai!")
         
@@ -270,79 +327,50 @@ if st.button("🚀 Buat Prediksi dan Rekomendasi", type="primary", use_container
             st.subheader("📈 Prediksi Hasil Panen & Biaya")
             st.info(f"Perhitungan untuk lahan seluas **{area:.2f} hektar**.")
             st.metric("🌾 Total Estimasi Hasil Panen", f"{prod * area:,.0f} Kg")
-            st.metric("💰 Total Estimasi Modal Awal", f"Rp {cap * area:,.0f}")
-            st.metric("🧾 Total Estimasi Biaya Perawatan", f"Rp {maint * area:,.0f}")
-            st.caption(f"Estimasi per hektar: {prod:,.0f} Kg/Ha, Modal Rp {cap:,.0f}/Ha, Perawatan Rp {maint:,.0f}/Ha.")
-            # ----- TAMBAHAN: DETAIL KOMPONEN BIAYA (VERSI OTOMATIS & SKALABEL) -----
-            st.markdown("---")  # Pemisah antarbagian
+            
+            # --- GUNAKAN VARIABEL KALKULATOR MANUAL ---
+            st.metric("💰 Total Estimasi Modal Awal", f"Rp {total_modal_calc:,.0f}")
+            st.metric("🧾 Total Estimasi Biaya Perawatan", f"Rp {total_rawat_calc:,.0f}")
+            
+            # --- PERBAIKI CAPTION ---
+            st.caption(f"Estimasi per hektar: {prod:,.0f} Kg/Ha, Modal Rp {modal_per_ha_calc:,.0f}/Ha, Perawatan Rp {rawat_per_ha_calc:,.0f}/Ha.")
+            
+            st.markdown("---") 
 
+            # --- L ---
             with st.popover("📦 Lihat Detail Estimasi Komponen Biaya (Dinamis)"):
-                st.markdown("### 🧱 Komponen Biaya Berdasarkan Luas Lahan dan Skala Usaha")
-
-                # --- Definisi biaya dasar per hektar (Rp) ---
-                modal_awal = {
-                    "Pengolahan Lahan (bajak, garu)": 1500000,
-                    "Pembelian Benih/Bibit Unggul": 800000,
-                    "Pupuk Dasar (sebelum tanam)": 1000000,
-                    "Sewa Lahan (jika menyewa)": 3000000,
-                    "Peralatan Kecil (cangkul, semprotan, dll.)": 500000
-                }
-
-                perawatan = {
-                    "Pupuk Susulan (Urea, SP-36, KCl)": 1800000,
-                    "Pestisida/Herbisida (pengendalian hama/gulma)": 800000,
-                    "Tenaga Kerja (tanam, pemeliharaan, panen)": 4000000,
-                    "Biaya Pengairan/Irigasi": 600000,
-                    "Perbaikan Peralatan": 300000
-                }
-
-                # --- Logika skala ekonomi ---
-                if area <= 2:
-                    scale_factor = 1.0
-                elif area <= 10:
-                    scale_factor = 0.95
-                else:
-                    scale_factor = 0.85  # lebih efisien untuk lahan besar
-
-                # --- Hitung total biaya berdasarkan luas lahan ---
-                total_modal = sum(modal_awal.values()) * area * scale_factor
-                total_rawat = sum(perawatan.values()) * area * scale_factor
-                total_all = total_modal + total_rawat
+                st.markdown("###  Komponen Biaya Berdasarkan Luas Lahan dan Skala Usaha")
 
                 st.info(
                     f"📏 Luas lahan **{area:.2f} ha**, faktor efisiensi **{scale_factor:.2f}** "
                     f"(estimasi biaya menyesuaikan skala usaha)"
                 )
 
-                st.write(f"💰 **Total Modal Awal:** Rp {total_modal:,.0f}")
-                st.write(f"🧾 **Total Biaya Perawatan:** Rp {total_rawat:,.0f}")
-                st.write(f"🪴 **Total Biaya Keseluruhan:** Rp {total_all:,.0f}")
+                st.write(f"💰 **Total Modal Awal:** Rp {total_modal_calc:,.0f}")
+                st.write(f"🧾 **Total Biaya Perawatan:** Rp {total_rawat_calc:,.0f}")
+                st.write(f"🪴 **Total Biaya Keseluruhan:** Rp {total_all_calc:,.0f}")
 
                 # --- Tampilkan tabel detail modal dan perawatan ---
                 st.markdown("#### 📊 Rincian Komponen Modal Awal (Rp)")
                 df_modal = pd.DataFrame({
-                    "Komponen": list(modal_awal.keys()),
-                    "Biaya per Ha": [f"Rp {v:,.0f}" for v in modal_awal.values()],
-                    "Estimasi Total": [f"Rp {v * area * scale_factor:,.0f}" for v in modal_awal.values()]
+                    "Komponen": list(modal_awal_dict.keys()),
+                    "Biaya per Ha": [f"Rp {v:,.0f}" for v in modal_awal_dict.values()],
+                    "Estimasi Total": [f"Rp {v * area * scale_factor:,.0f}" for v in modal_awal_dict.values()]
                 })
                 st.dataframe(df_modal, hide_index=True, use_container_width=True)
 
                 st.markdown("#### 📊 Rincian Komponen Biaya Perawatan (Rp)")
                 df_rawat = pd.DataFrame({
-                    "Komponen": list(perawatan.keys()),
-                    "Biaya per Ha": [f"Rp {v:,.0f}" for v in perawatan.values()],
-                    "Estimasi Total": [f"Rp {v * area * scale_factor:,.0f}" for v in perawatan.values()]
+                    "Komponen": list(perawatan_dict.keys()),
+                    "Biaya per Ha": [f"Rp {v:,.0f}" for v in perawatan_dict.values()],
+                    "Estimasi Total": [f"Rp {v * area * scale_factor:,.0f}" for v in perawatan_dict.values()]
                 })
                 st.dataframe(df_rawat, hide_index=True, use_container_width=True)
-
-        
 
                 st.caption(
                     "_Catatan: Estimasi biaya otomatis disesuaikan dengan luas lahan. "
                     "Lahan lebih besar mendapatkan efisiensi biaya per hektar yang lebih baik._"
                 )
-        
-
         with col2:
             st.subheader("🌿 Rekomendasi Pemupukan")
             if hasil_rekom['status'] == 'success':
@@ -616,6 +644,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
