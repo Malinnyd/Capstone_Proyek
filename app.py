@@ -619,13 +619,17 @@ with st.form("feedback_form", clear_on_submit=True):
                 "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
             }])
 
-            try:
-                updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
-                conn.update(worksheet="Sheet1", data=updated_data)
-                st.success("✅ Terima kasih! Feedback Anda berhasil disimpan ke Google Sheets.")
-            except Exception as e:
-                st.error("❌ Gagal menyimpan feedback ke Google Sheets. Pastikan sheet dapat diakses.")
-                
+            st.write("🔍 Menguji koneksi Google Sheets...")
+
+try:
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    df_test = conn.read(worksheet="Sheet1", usecols=list(range(4)))
+    st.success("✅ Koneksi BERHASIL. Sheets dapat diakses!")
+    st.dataframe(df_test)
+except Exception as e:
+    st.error(f"❌ Masih gagal membaca Google Sheets: {e}")
+
+
 # 💬 TAMPILKAN SEMUA FEEDBACK
 
 st.divider()
@@ -645,6 +649,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
