@@ -578,12 +578,17 @@ with tabs[4]:
 
 
 # 🗣️ SECTION: FEEDBACK DARI PENGGUNA
+import streamlit as st
+import pandas as pd
+import datetime
+from streamlit_gsheets import GSheetsConnection
+
 st.divider()
 st.subheader("🗣️ Beri Feedback Anda")
 
-
-#  COBA KONEKSI KE GOOGLE SHEETS
-
+# =========================================
+# 🔗 1. COBA KONEKSI KE GOOGLE SHEETS
+# =========================================
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     existing_data = conn.read(worksheet="Sheet1", ttl=5)
@@ -593,6 +598,7 @@ try:
 
     st.success("✅ Terhubung ke Google Sheets.")
     connection_ok = True
+
 except Exception as e:
     st.error(f"⚠️ Gagal terhubung ke Google Sheets: {e}")
     st.info("👉 Sistem akan menggunakan tautan Google Form sebagai alternatif input feedback.")
@@ -600,8 +606,9 @@ except Exception as e:
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 
 
-#  FORM FEEDBACK (jika koneksi aktif)
-
+# =========================================
+# 📝 2. FORM FEEDBACK (jika koneksi aktif)
+# =========================================
 if connection_ok:
     with st.form("feedback_form", clear_on_submit=True):
         nama = st.text_input("Nama Anda")
@@ -626,20 +633,24 @@ if connection_ok:
                     st.success("✅ Feedback berhasil disimpan ke Google Sheets!")
                 except Exception as e:
                     st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
+
+# =========================================
+# 💡 3. ALTERNATIF: SEMATKAN GOOGLE FORM LANGSUNG DI STREAMLIT
+# =========================================
 else:
- 
-  # 💡 3. ALTERNATIF: SEMATKAN GOOGLE FORM LANGSUNG DI STREAMLIT
-st.markdown("### 💬 Formulir Feedback Alternatif")
-st.write(
-    "Karena sistem tidak dapat terhubung ke Google Sheets, "
-    "Anda masih bisa memberikan feedback melalui formulir di bawah ini:"
-)
+    st.markdown("### 💬 Formulir Feedback Alternatif")
+    st.write(
+        "Karena sistem tidak dapat terhubung ke Google Sheets, "
+        "Anda masih bisa memberikan feedback melalui formulir di bawah ini:"
+    )
 
-form_embed = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?embedded=true"
-st.components.v1.iframe(form_embed, height=700)
+    form_embed = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?embedded=true"
+    st.components.v1.iframe(form_embed, height=700)
 
 
-#  TAMPILKAN SEMUA FEEDBACK 
+# =========================================
+# 💬 4. TAMPILKAN SEMUA FEEDBACK
+# =========================================
 st.divider()
 st.subheader("💬 Umpan Balik dari Pengguna")
 
@@ -655,8 +666,9 @@ else:
         st.info("Masukan Anda akan muncul di sini setelah diisi melalui formulir Google Form.")
 
 
-#   DEBUG KONEKSI (opsional)
-
+# =========================================
+# 🔍 5. DEBUG KONEKSI (opsional)
+# =========================================
 if connection_ok:
     st.divider()
     st.subheader("🔍 Debug Koneksi Google Sheets")
@@ -672,6 +684,7 @@ if connection_ok:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
