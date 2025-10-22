@@ -579,49 +579,45 @@ with tabs[4]:
 
 # 🗣️ SECTION: FEEDBACK PENGGUNA
 
+import streamlit as st
+import pandas as pd
+from streamlit_gsheets import GSheetsConnection
+
 st.subheader("🗣️ Feedback dari Pengguna")
 
-# Coba baca data dari Google Sheets
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
-    existing_data = conn.read(worksheet="Sheet1", ttl=5)
+    df = conn.read(worksheet="Form Responses 1", ttl=5)
 
-    if existing_data is None or existing_data.empty:
-        st.info("Belum ada feedback yang masuk.")
-    else:
+    if df is not None and not df.empty:
+        # ubah nama kolom agar seragam
+        df.columns = ["timestamp", "nama", "rating", "komentar"]
         st.success("✅ Data feedback berhasil dimuat.")
-except Exception:
-    existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
-    st.info("📄 Sistem menggunakan Google Form untuk pengumpulan feedback.")
+    else:
+        df = pd.DataFrame(columns=["timestamp", "nama", "rating", "komentar"])
+        st.info("Belum ada feedback.")
+except Exception as e:
+    st.error(f"Gagal membaca data dari Google Sheets: {e}")
+    df = pd.DataFrame(columns=["timestamp", "nama", "rating", "komentar"])
 
+# Tombol ke Google Form
+st.link_button(
+    "📨 Buka Formulir Feedback",
+    "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing"
+)
 
-#  TOMBOL FORM GOOGLE
-
-st.markdown("""
-<div style='background-color:#1E1E1E; border-radius:10px; padding:15px; margin-top:10px;'>
-  <h4 style='color:#00FFCC;'>💡 Kirim Feedback Anda</h4>
-  <p style='color:#CCCCCC;'>Silakan klik tombol di bawah untuk mengisi formulir feedback aplikasi:</p>
-</div>
-""", unsafe_allow_html=True)
-
-st.link_button("📨 Buka Formulir Feedback", 
-    "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing")
-
-
-#  TAMPILKAN DAFTAR FEEDBACK
-
-if not existing_data.empty:
-    st.markdown("<h4 style='color:#00FFCC; margin-top:30px;'>💬 Umpan Balik Terbaru</h4>", unsafe_allow_html=True)
-
-    for _, fb in existing_data.iloc[::-1].iterrows():
+# Tampilkan feedback
+if not df.empty:
+    st.markdown("<h4>💬 Umpan Balik Terbaru</h4>", unsafe_allow_html=True)
+    for _, fb in df.iloc[::-1].iterrows():
         st.markdown(f"""
-        <div style='background-color:#222; border-radius:8px; padding:12px; margin-bottom:10px; border-left:3px solid #00FFCC;'>
-          <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']}/5 &nbsp;|&nbsp; <i>{fb['tanggal']}</i></p>
+        <div style='background-color:#222; border-radius:8px; padding:10px; margin-bottom:10px; border-left:3px solid #00FFCC;'>
+          <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']} &nbsp;|&nbsp; <i>{fb['timestamp']}</i></p>
           <p style='color:#CCCCCC; font-style:italic;'>{fb['komentar']}</p>
         </div>
         """, unsafe_allow_html=True)
 else:
-    st.info("Belum ada feedback untuk ditampilkan. Silakan isi melalui formulir di atas 😊")
+    st.info("Belum ada feedback untuk ditampilkan.")
 
 
 #  FOOTER
@@ -629,6 +625,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
