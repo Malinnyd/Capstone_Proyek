@@ -582,6 +582,16 @@ with tabs[4]:
 st.divider()
 st.subheader("🗣️ Beri Feedback Anda")
 
+st.write("🔍 Testing koneksi Google Sheets...")
+try:
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    df = conn.read(worksheet="Sheet1", ttl=5)
+    st.success("✅ Koneksi berhasil! Data berhasil dibaca dari Google Sheets.")
+    st.dataframe(df)
+except Exception as e:
+    st.error(f"❌ Gagal terhubung: {e}")
+
+
 # 🔗 Koneksi
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
@@ -653,6 +663,7 @@ except Exception as e:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
