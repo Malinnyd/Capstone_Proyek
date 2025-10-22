@@ -577,113 +577,51 @@ with tabs[4]:
         st.link_button("🔗 Buka Jurnal", "https://doi.org/10.17503/jtcs.2021.34")
 
 
-# 🌿 SECTION: FEEDBACK DARI PENGGUNA
-import streamlit as st
-import pandas as pd
-import datetime
-from streamlit_gsheets import GSheetsConnection
+# 🗣️ SECTION: FEEDBACK PENGGUNA
 
-# ==============================
-# 💬 JUDUL UTAMA
-# ==============================
-st.markdown("""
-<div style='text-align:center; padding: 10px 0;'>
-  <h2 style='color:#66FFCC;'>🗣️ Beri Feedback Anda</h2>
-  <p style='color:#BBBBBB;'>Kami sangat menghargai pendapat Anda untuk meningkatkan aplikasi <b>TUMBUH</b>.</p>
-</div>
-""", unsafe_allow_html=True)
+st.subheader("🗣️ Feedback dari Pengguna")
 
-# ==============================
-# 🔗 1. KONEKSI KE GOOGLE SHEETS
-# ==============================
+# Coba baca data dari Google Sheets
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     existing_data = conn.read(worksheet="Sheet1", ttl=5)
 
     if existing_data is None or existing_data.empty:
-        existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
-
-    st.success("✅ Terhubung ke Google Sheets.")
-    connection_ok = True
-except Exception as e:
-    st.error(f"⚠️ Gagal terhubung ke Google Sheets: {e}")
-    connection_ok = False
+        st.info("Belum ada feedback yang masuk.")
+    else:
+        st.success("✅ Data feedback berhasil dimuat.")
+except Exception:
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
+    st.info("📄 Sistem menggunakan Google Form untuk pengumpulan feedback.")
 
-# ==============================
-# 📝 2. FORM FEEDBACK
-# ==============================
-if connection_ok:
-    st.markdown("""
-    <div style='background-color:#1e1e1e; border-radius:12px; padding:25px; box-shadow:0px 0px 8px rgba(0,255,180,0.2);'>
-      <h4 style='color:#66FFCC;'>💡 Formulir Feedback</h4>
-    """, unsafe_allow_html=True)
 
-    with st.form("feedback_form", clear_on_submit=True):
-        nama = st.text_input("🧑 Nama Anda")
-        rating = st.slider("⭐ Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
-        komentar = st.text_area("💬 Tulis feedback atau saran Anda di sini...")
-        submitted = st.form_submit_button("📨 Kirim Feedback")
+#  TOMBOL FORM GOOGLE
 
-        if submitted:
-            if not nama.strip() or not komentar.strip():
-                st.warning("⚠️ Mohon isi nama dan komentar sebelum mengirim.")
-            else:
-                new_feedback = pd.DataFrame([{
-                    "nama": nama,
-                    "rating": rating,
-                    "komentar": komentar,
-                    "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
-                }])
+st.markdown("""
+<div style='background-color:#1E1E1E; border-radius:10px; padding:15px; margin-top:10px;'>
+  <h4 style='color:#00FFCC;'>💡 Kirim Feedback Anda</h4>
+  <p style='color:#CCCCCC;'>Silakan klik tombol di bawah untuk mengisi formulir feedback aplikasi:</p>
+</div>
+""", unsafe_allow_html=True)
 
-                updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
-                try:
-                    conn.update(worksheet="Sheet1", data=updated_data)
-                    st.success("✅ Feedback berhasil disimpan ke Google Sheets!")
-                except Exception as e:
-                    st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
+st.link_button("📨 Buka Formulir Feedback", 
+    "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing")
 
-    st.markdown("</div>", unsafe_allow_html=True)
 
-else:
-    # ==============================
-    # 📄 3. ALTERNATIF GOOGLE FORM (EMBED)
-    # ==============================
-    st.markdown("""
-    <div style='background-color:#1e1e1e; border-radius:12px; padding:25px; box-shadow:0px 0px 8px rgba(255,255,255,0.05); margin-top:20px;'>
-      <h4 style='color:#FFB347;'>💬 Formulir Feedback Alternatif</h4>
-      <p style='color:#BBBBBB;'>Koneksi ke Google Sheets tidak tersedia. Anda dapat mengisi form di bawah ini:</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    form_embed = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?embedded=true"
-    st.components.v1.iframe(form_embed, height=750)
-
-# ==============================
-# 💾 4. TAMPILKAN FEEDBACK
-# ==============================
-st.markdown("<h3 style='margin-top:40px; color:#66FFCC;'>💬 Umpan Balik dari Pengguna</h3>", unsafe_allow_html=True)
+#  TAMPILKAN DAFTAR FEEDBACK
 
 if not existing_data.empty:
+    st.markdown("<h4 style='color:#00FFCC; margin-top:30px;'>💬 Umpan Balik Terbaru</h4>", unsafe_allow_html=True)
+
     for _, fb in existing_data.iloc[::-1].iterrows():
         st.markdown(f"""
-        <div style='background-color:#222; border-radius:10px; padding:15px; margin-bottom:10px; border-left:4px solid #66FFCC;'>
+        <div style='background-color:#222; border-radius:8px; padding:12px; margin-bottom:10px; border-left:3px solid #00FFCC;'>
           <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']}/5 &nbsp;|&nbsp; <i>{fb['tanggal']}</i></p>
           <p style='color:#CCCCCC; font-style:italic;'>{fb['komentar']}</p>
         </div>
         """, unsafe_allow_html=True)
 else:
-    st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
-
-# ==============================
-# 🔍 5. DEBUG (OPSIONAL)
-# ==============================
-with st.expander("🔍 Debug Koneksi Google Sheets"):
-    try:
-        df = conn.read(worksheet="Sheet1", ttl=5)
-        st.dataframe(df)
-    except Exception as e:
-        st.error(f"Gagal membaca ulang Google Sheets: {e}")
+    st.info("Belum ada feedback untuk ditampilkan. Silakan isi melalui formulir di atas 😊")
 
 
 #  FOOTER
@@ -691,6 +629,7 @@ with st.expander("🔍 Debug Koneksi Google Sheets"):
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
