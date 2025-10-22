@@ -579,55 +579,74 @@ with tabs[4]:
 
 # 🗣️ SECTION: FEEDBACK DARI PENGGUNA
 
+
+
+#  Inisialisasi koneksi ke Google Sheets
+
 st.divider()
 st.subheader("🗣️ Beri Feedback Anda")
 
-# Inisialisasi koneksi ke Google Sheet
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
 except Exception as e:
-    st.error("❌ Gagal membuat koneksi ke Google Sheets.")
+    st.error(f"❌ Gagal membuat koneksi ke Google Sheets: {e}")
     st.stop()
 
-# Coba baca data awal dari sheet
+
+#  Coba baca data awal dari sheet
+
 try:
-    existing_data = conn.read(worksheet="Sheet1", usecols=list(range(4)), ttl=5)
-except Exception:
+    existing_data = conn.read(worksheet="Sheet1", ttl=5)
+    if existing_data is None or existing_data.empty:
+        st.info("ℹ️ Sheet kosong, membuat tabel baru.")
+        existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
+except Exception as e:
+    st.error(f"❌ Gagal membaca data dari Google Sheets: {e}")
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 
-# Pastikan kolom sudah ada
-if existing_data is None or existing_data.empty:
-    existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 
-
-# 📝 FORMULIR FEEDBACK
+# FORMULIR FEEDBACK
 
 with st.form("feedback_form", clear_on_submit=True):
     nama = st.text_input("Nama Anda")
     rating = st.slider("Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
     komentar = st.text_area("Tulis feedback atau saran Anda di sini...")
+
     submitted = st.form_submit_button("Kirim Feedback")
 
     if submitted:
-        if nama.strip() == "" or komentar.strip() == "":
+        if not nama.strip() or not komentar.strip():
             st.warning("⚠️ Mohon isi nama dan komentar sebelum mengirim.")
         else:
             new_feedback = pd.DataFrame([{
-                "nama": nama,
+                "nama": nama.strip(),
                 "rating": rating,
-                "komentar": komentar,
+                "komentar": komentar.strip(),
                 "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
             }])
 
-            st.write("🔍 Menguji koneksi Google Sheets...")
+            # Gabungkan data lama dengan data baru
+            updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
 
-try:
-    conn = st.connection("gsheets", type=GSheetsConnection)
-    df_test = conn.read(worksheet="Sheet1", usecols=list(range(4)))
-    st.success("✅ Koneksi BERHASIL. Sheets dapat diakses!")
-    st.dataframe(df_test)
-except Exception as e:
-    st.error(f"❌ Masih gagal membaca Google Sheets: {e}")
+            # Simpan kembali ke Google Sheets
+            try:
+                conn.update(worksheet="Sheet1", data=updated_data)
+                st.success("✅ Terima kasih! Feedback Anda berhasil disimpan ke Google Sheets.")
+            except Exception as e:
+                st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
+
+
+
+# DEBUG OPSIONAL (Uji koneksi)
+
+with st.expander("🔍 Uji koneksi Google Sheets (Debug)"):
+    try:
+        df_test = conn.read(worksheet="Sheet1")
+        st.success("✅ Koneksi BERHASIL. Sheets dapat diakses!")
+        st.dataframe(df_test.head())
+    except Exception as e:
+        st.error(f"❌ Masih gagal membaca Google Sheets: {e}")
+
 
 
 # 💬 TAMPILKAN SEMUA FEEDBACK
@@ -636,7 +655,7 @@ st.divider()
 st.subheader("💬 Umpan Balik dari Pengguna")
 
 if not existing_data.empty:
-    for _, fb in existing_data.iloc[::-1].iterrows():  # menampilkan terbaru di atas
+    for _, fb in existing_data.iloc[::-1].iterrows():  # tampilkan yang terbaru dulu
         with st.container():
             st.markdown(f"**🧑 {fb['nama']}** | ⭐ {fb['rating']}/5 | *{fb['tanggal']}*")
             st.markdown(f"_{fb['komentar']}_")
@@ -649,6 +668,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
