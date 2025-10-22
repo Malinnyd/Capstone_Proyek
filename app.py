@@ -577,18 +577,25 @@ with tabs[4]:
         st.link_button("🔗 Buka Jurnal", "https://doi.org/10.17503/jtcs.2021.34")
 
 
-# 🗣️ SECTION: FEEDBACK DARI PENGGUNA
+# 🌿 SECTION: FEEDBACK DARI PENGGUNA
 import streamlit as st
 import pandas as pd
 import datetime
 from streamlit_gsheets import GSheetsConnection
 
-st.divider()
-st.subheader("🗣️ Beri Feedback Anda")
+# ==============================
+# 💬 JUDUL UTAMA
+# ==============================
+st.markdown("""
+<div style='text-align:center; padding: 10px 0;'>
+  <h2 style='color:#66FFCC;'>🗣️ Beri Feedback Anda</h2>
+  <p style='color:#BBBBBB;'>Kami sangat menghargai pendapat Anda untuk meningkatkan aplikasi <b>TUMBUH</b>.</p>
+</div>
+""", unsafe_allow_html=True)
 
-# =========================================
-# 🔗 1. COBA KONEKSI KE GOOGLE SHEETS
-# =========================================
+# ==============================
+# 🔗 1. KONEKSI KE GOOGLE SHEETS
+# ==============================
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
     existing_data = conn.read(worksheet="Sheet1", ttl=5)
@@ -598,23 +605,25 @@ try:
 
     st.success("✅ Terhubung ke Google Sheets.")
     connection_ok = True
-
 except Exception as e:
     st.error(f"⚠️ Gagal terhubung ke Google Sheets: {e}")
-    st.info("👉 Sistem akan menggunakan tautan Google Form sebagai alternatif input feedback.")
     connection_ok = False
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 
-
-# =========================================
-# 📝 2. FORM FEEDBACK (jika koneksi aktif)
-# =========================================
+# ==============================
+# 📝 2. FORM FEEDBACK
+# ==============================
 if connection_ok:
+    st.markdown("""
+    <div style='background-color:#1e1e1e; border-radius:12px; padding:25px; box-shadow:0px 0px 8px rgba(0,255,180,0.2);'>
+      <h4 style='color:#66FFCC;'>💡 Formulir Feedback</h4>
+    """, unsafe_allow_html=True)
+
     with st.form("feedback_form", clear_on_submit=True):
-        nama = st.text_input("Nama Anda")
-        rating = st.slider("Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
-        komentar = st.text_area("Tulis feedback atau saran Anda di sini...")
-        submitted = st.form_submit_button("Kirim Feedback")
+        nama = st.text_input("🧑 Nama Anda")
+        rating = st.slider("⭐ Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
+        komentar = st.text_area("💬 Tulis feedback atau saran Anda di sini...")
+        submitted = st.form_submit_button("📨 Kirim Feedback")
 
         if submitted:
             if not nama.strip() or not komentar.strip():
@@ -634,49 +643,47 @@ if connection_ok:
                 except Exception as e:
                     st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
 
-# =========================================
-# 💡 3. ALTERNATIF: SEMATKAN GOOGLE FORM LANGSUNG DI STREAMLIT
-# =========================================
+    st.markdown("</div>", unsafe_allow_html=True)
+
 else:
-    st.markdown("### 💬 Formulir Feedback Alternatif")
-    st.write(
-        "Karena sistem tidak dapat terhubung ke Google Sheets, "
-        "Anda masih bisa memberikan feedback melalui formulir di bawah ini:"
-    )
+    # ==============================
+    # 📄 3. ALTERNATIF GOOGLE FORM (EMBED)
+    # ==============================
+    st.markdown("""
+    <div style='background-color:#1e1e1e; border-radius:12px; padding:25px; box-shadow:0px 0px 8px rgba(255,255,255,0.05); margin-top:20px;'>
+      <h4 style='color:#FFB347;'>💬 Formulir Feedback Alternatif</h4>
+      <p style='color:#BBBBBB;'>Koneksi ke Google Sheets tidak tersedia. Anda dapat mengisi form di bawah ini:</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     form_embed = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?embedded=true"
-    st.components.v1.iframe(form_embed, height=700)
+    st.components.v1.iframe(form_embed, height=750)
 
-
-# =========================================
-# 💬 4. TAMPILKAN SEMUA FEEDBACK
-# =========================================
-st.divider()
-st.subheader("💬 Umpan Balik dari Pengguna")
+# ==============================
+# 💾 4. TAMPILKAN FEEDBACK
+# ==============================
+st.markdown("<h3 style='margin-top:40px; color:#66FFCC;'>💬 Umpan Balik dari Pengguna</h3>", unsafe_allow_html=True)
 
 if not existing_data.empty:
     for _, fb in existing_data.iloc[::-1].iterrows():
-        st.markdown(f"**🧑 {fb['nama']}** | ⭐ {fb['rating']}/5 | *{fb['tanggal']}*")
-        st.markdown(f"_{fb['komentar']}_")
-        st.markdown("---")
+        st.markdown(f"""
+        <div style='background-color:#222; border-radius:10px; padding:15px; margin-bottom:10px; border-left:4px solid #66FFCC;'>
+          <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']}/5 &nbsp;|&nbsp; <i>{fb['tanggal']}</i></p>
+          <p style='color:#CCCCCC; font-style:italic;'>{fb['komentar']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 else:
-    if connection_ok:
-        st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
-    else:
-        st.info("Masukan Anda akan muncul di sini setelah diisi melalui formulir Google Form.")
+    st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
 
-
-# =========================================
-# 🔍 5. DEBUG KONEKSI (opsional)
-# =========================================
-if connection_ok:
-    st.divider()
-    st.subheader("🔍 Debug Koneksi Google Sheets")
+# ==============================
+# 🔍 5. DEBUG (OPSIONAL)
+# ==============================
+with st.expander("🔍 Debug Koneksi Google Sheets"):
     try:
         df = conn.read(worksheet="Sheet1", ttl=5)
         st.dataframe(df)
     except Exception as e:
-        st.error(f"❌ Gagal membaca ulang Google Sheets: {e}")
+        st.error(f"Gagal membaca ulang Google Sheets: {e}")
 
 
 #  FOOTER
@@ -684,6 +691,7 @@ if connection_ok:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
