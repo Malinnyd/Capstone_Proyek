@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import datetime
 import streamlit as st
-
+from streamlit_gsheets import GSheetsConnection
 
 
 # MENDEFINISI CLASS MODEL REKOMENDASI
@@ -631,6 +631,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
