@@ -628,31 +628,15 @@ if connection_ok:
                     st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
 else:
  
-    # ALTERNATIF: GUNAKAN GOOGLE FORM
-   
-    st.markdown("### 💬 Formulir Feedback Alternatif")
-    st.write(
-        "Karena sistem tidak dapat terhubung ke Google Sheets, "
-        "Anda masih bisa memberikan feedback melalui formulir berikut:"
-    )
+  # 💡 3. ALTERNATIF: SEMATKAN GOOGLE FORM LANGSUNG DI STREAMLIT
+st.markdown("### 💬 Formulir Feedback Alternatif")
+st.write(
+    "Karena sistem tidak dapat terhubung ke Google Sheets, "
+    "Anda masih bisa memberikan feedback melalui formulir di bawah ini:"
+)
 
-    form_link = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing"
-    st.markdown(
-        f"""<div style="text-align:center; margin-top:20px;">
-        <a href="{form_link}" target="_blank">
-          <button style="
-            background-color:#28a745;
-            color:white;
-            border:none;
-            padding:12px 25px;
-            border-radius:8px;
-            font-size:16px;
-            cursor:pointer;">
-            📝 Buka Formulir Feedback
-          </button>
-        </a></div>""",
-        unsafe_allow_html=True,
-    )
+form_embed = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?embedded=true"
+st.components.v1.iframe(form_embed, height=700)
 
 
 #  TAMPILKAN SEMUA FEEDBACK 
@@ -688,6 +672,7 @@ if connection_ok:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
