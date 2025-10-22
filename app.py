@@ -593,12 +593,13 @@ except Exception as e:
     st.stop()
 
 
+
 #  Coba baca data awal dari sheet
 
 try:
     existing_data = conn.read(worksheet="Sheet1", ttl=5)
     if existing_data is None or existing_data.empty:
-        st.info("ℹ️ Sheet kosong, membuat tabel baru.")
+        st.info("ℹ️ Sheet kosong, akan dibuat baru.")
         existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 except Exception as e:
     st.error(f"❌ Gagal membaca data dari Google Sheets: {e}")
@@ -625,10 +626,10 @@ with st.form("feedback_form", clear_on_submit=True):
                 "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
             }])
 
-            # Gabungkan data lama dengan data baru
+            # Tambahkan ke data lama
             updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
 
-            # Simpan kembali ke Google Sheets
+            # Simpan ke Google Sheets
             try:
                 conn.update(worksheet="Sheet1", data=updated_data)
                 st.success("✅ Terima kasih! Feedback Anda berhasil disimpan ke Google Sheets.")
@@ -639,15 +640,13 @@ with st.form("feedback_form", clear_on_submit=True):
 
 # DEBUG OPSIONAL (Uji koneksi)
 
-with st.expander("🔍 Uji koneksi Google Sheets (Debug)"):
+with st.expander("🔍 Debug Koneksi Google Sheets"):
     try:
         df_test = conn.read(worksheet="Sheet1")
-        st.success("✅ Koneksi BERHASIL. Sheets dapat diakses!")
+        st.success("✅ Koneksi ke Google Sheets BERHASIL!")
         st.dataframe(df_test.head())
     except Exception as e:
         st.error(f"❌ Masih gagal membaca Google Sheets: {e}")
-
-
 
 # 💬 TAMPILKAN SEMUA FEEDBACK
 
@@ -655,7 +654,7 @@ st.divider()
 st.subheader("💬 Umpan Balik dari Pengguna")
 
 if not existing_data.empty:
-    for _, fb in existing_data.iloc[::-1].iterrows():  # tampilkan yang terbaru dulu
+    for _, fb in existing_data.iloc[::-1].iterrows():  # terbaru di atas
         with st.container():
             st.markdown(f"**🧑 {fb['nama']}** | ⭐ {fb['rating']}/5 | *{fb['tanggal']}*")
             st.markdown(f"_{fb['komentar']}_")
@@ -668,6 +667,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
