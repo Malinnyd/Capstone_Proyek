@@ -597,7 +597,7 @@ except Exception as e:
 #  Coba baca data awal dari sheet
 
 try:
-    existing_data = conn.read(worksheet="Sheet1", ttl=5)
+    existing_data = conn.read(worksheet="Sheet1", usecols=None)
     if existing_data is None or existing_data.empty:
         st.info("ℹ️ Sheet kosong, akan dibuat baru.")
         existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
@@ -667,6 +667,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
