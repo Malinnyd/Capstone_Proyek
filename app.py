@@ -583,14 +583,25 @@ st.divider()
 st.subheader("🗣️ Beri Feedback Anda")
 
 # Inisialisasi koneksi ke Google Sheet
-conn = st.connection("gsheets", type=GSheetsConnection)
+try:
+    conn = st.connection("gsheets", type=GSheetsConnection)
+except Exception as e:
+    st.error("❌ Gagal membuat koneksi ke Google Sheets.")
+    st.stop()
 
-# Ambil data awal dari sheet (kalau ada)
-existing_data = conn.read(worksheet="Sheet1", usecols=list(range(5)), ttl=5)
+# Coba baca data awal dari sheet
+try:
+    existing_data = conn.read(worksheet="Sheet1", usecols=list(range(4)), ttl=5)
+except Exception:
+    existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
+
+# Pastikan kolom sudah ada
 if existing_data is None or existing_data.empty:
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 
-# Formulir Feedback
+
+# 📝 FORMULIR FEEDBACK
+
 with st.form("feedback_form", clear_on_submit=True):
     nama = st.text_input("Nama Anda")
     rating = st.slider("Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
@@ -607,17 +618,21 @@ with st.form("feedback_form", clear_on_submit=True):
                 "komentar": komentar,
                 "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
             }])
-            updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
-            conn.update(worksheet="Sheet1", data=updated_data)
-            st.success("✅ Terima kasih! Feedback Anda berhasil disimpan ke Google Sheets.")
 
+            try:
+                updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
+                conn.update(worksheet="Sheet1", data=updated_data)
+                st.success("✅ Terima kasih! Feedback Anda berhasil disimpan ke Google Sheets.")
+            except Exception as e:
+                st.error("❌ Gagal menyimpan feedback ke Google Sheets. Pastikan sheet dapat diakses.")
+                
 # 💬 TAMPILKAN SEMUA FEEDBACK
 
 st.divider()
 st.subheader("💬 Umpan Balik dari Pengguna")
 
 if not existing_data.empty:
-    for _, fb in existing_data.iloc[::-1].iterrows():  # terbaru di atas
+    for _, fb in existing_data.iloc[::-1].iterrows():  # menampilkan terbaru di atas
         with st.container():
             st.markdown(f"**🧑 {fb['nama']}** | ⭐ {fb['rating']}/5 | *{fb['tanggal']}*")
             st.markdown(f"_{fb['komentar']}_")
@@ -625,12 +640,12 @@ if not existing_data.empty:
 else:
     st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
 
-
 #  FOOTER
 
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
