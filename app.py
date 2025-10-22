@@ -578,15 +578,7 @@ with tabs[4]:
 
 
 # 🗣️ SECTION: FEEDBACK DARI PENGGUNA
-# 🗣️ SECTION: FEEDBACK DARI PENGGUNA
-import streamlit as st
-import pandas as pd
-import datetime
-from streamlit_gsheets import GSheetsConnection
 
-# -------------------------------------
-# Judul & Deskripsi
-# -------------------------------------
 st.divider()
 st.subheader("🗣️ Beri Feedback Anda")
 
@@ -600,16 +592,19 @@ except Exception as e:
 
 # BACA DATA DARI GOOGLE SHEETS (DENGAN HANDLING KOSONG)
 
+
 try:
     existing_data = conn.read(worksheet="Sheet1", ttl=5)
 
-    # Jika sheet kosong atau belum ada header valid
-    if existing_data is None or len(existing_data.columns) < 4:
-        st.warning("📄 Sheet kosong atau belum memiliki data, membuat tabel baru.")
+    # Jika sheet kosong (tidak ada baris sama sekali)
+    if existing_data is None or existing_data.empty or len(existing_data.columns) == 0:
+        st.info("ℹ️ Sheet masih kosong, membuat tabel baru.")
         existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
+
 except Exception as e:
-    st.error(f"❌ Gagal membaca data dari Google Sheets: {e}")
+    st.warning("⚠️ Tidak bisa membaca Sheet, menggunakan DataFrame kosong.")
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
+
 
 # FORM FEEDBACK PENGGUNA
 
@@ -674,6 +669,7 @@ with st.expander("🔍 Debug Koneksi Google Sheets"):
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
