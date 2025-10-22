@@ -578,91 +578,117 @@ with tabs[4]:
 
 
 # 🗣️ SECTION: FEEDBACK DARI PENGGUNA
-
 st.divider()
 st.subheader("🗣️ Beri Feedback Anda")
 
-st.write("🔍 Testing koneksi Google Sheets...")
+
+#  COBA KONEKSI KE GOOGLE SHEETS
+
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
-    df = conn.read(worksheet="Sheet1", ttl=5)
-    st.success("✅ Koneksi berhasil! Data berhasil dibaca dari Google Sheets.")
-    st.dataframe(df)
-except Exception as e:
-    st.error(f"❌ Gagal terhubung: {e}")
-
-
-# 🔗 Koneksi
-try:
-    conn = st.connection("gsheets", type=GSheetsConnection)
-except Exception as e:
-    st.error(f"❌ Gagal membuat koneksi ke Google Sheets: {e}")
-    st.stop()
-
-# 📄 Baca data dengan aman
-try:
     existing_data = conn.read(worksheet="Sheet1", ttl=5)
+
     if existing_data is None or existing_data.empty:
-        st.warning("⚠️ Tidak bisa membaca Sheet, menggunakan DataFrame kosong.")
         existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
+
+    st.success("✅ Terhubung ke Google Sheets.")
+    connection_ok = True
 except Exception as e:
-    st.error(f"❌ Gagal membaca data dari Google Sheets: {e}")
+    st.error(f"⚠️ Gagal terhubung ke Google Sheets: {e}")
+    st.info("👉 Sistem akan menggunakan tautan Google Form sebagai alternatif input feedback.")
+    connection_ok = False
     existing_data = pd.DataFrame(columns=["nama", "rating", "komentar", "tanggal"])
 
-# 📝 Form Feedback
-with st.form("feedback_form", clear_on_submit=True):
-    nama = st.text_input("Nama Anda")
-    rating = st.slider("Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
-    komentar = st.text_area("Tulis feedback atau saran Anda di sini...")
-    submitted = st.form_submit_button("Kirim Feedback")
 
-    if submitted:
-        if not nama.strip() or not komentar.strip():
-            st.warning("⚠️ Mohon isi nama dan komentar sebelum mengirim.")
-        else:
-            new_feedback = pd.DataFrame([{
-                "nama": nama,
-                "rating": rating,
-                "komentar": komentar,
-                "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
-            }])
+#  FORM FEEDBACK (jika koneksi aktif)
 
-            updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
+if connection_ok:
+    with st.form("feedback_form", clear_on_submit=True):
+        nama = st.text_input("Nama Anda")
+        rating = st.slider("Penilaian Aplikasi (1 = Buruk, 5 = Sangat Baik)", 1, 5, 5)
+        komentar = st.text_area("Tulis feedback atau saran Anda di sini...")
+        submitted = st.form_submit_button("Kirim Feedback")
 
-            try:
-                conn.update(worksheet="Sheet1", data=updated_data)
-                st.success("✅ Feedback berhasil disimpan ke Google Sheets!")
-            except Exception as e:
-                st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
+        if submitted:
+            if not nama.strip() or not komentar.strip():
+                st.warning("⚠️ Mohon isi nama dan komentar sebelum mengirim.")
+            else:
+                new_feedback = pd.DataFrame([{
+                    "nama": nama,
+                    "rating": rating,
+                    "komentar": komentar,
+                    "tanggal": datetime.datetime.now().strftime("%d-%m-%Y %H:%M")
+                }])
 
-# 💬 Tampilkan feedback
+                updated_data = pd.concat([existing_data, new_feedback], ignore_index=True)
+                try:
+                    conn.update(worksheet="Sheet1", data=updated_data)
+                    st.success("✅ Feedback berhasil disimpan ke Google Sheets!")
+                except Exception as e:
+                    st.error(f"❌ Gagal menyimpan feedback ke Google Sheets: {e}")
+else:
+ 
+    # ALTERNATIF: GUNAKAN GOOGLE FORM
+   
+    st.markdown("### 💬 Formulir Feedback Alternatif")
+    st.write(
+        "Karena sistem tidak dapat terhubung ke Google Sheets, "
+        "Anda masih bisa memberikan feedback melalui formulir berikut:"
+    )
+
+    form_link = "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing"
+    st.markdown(
+        f"""<div style="text-align:center; margin-top:20px;">
+        <a href="{form_link}" target="_blank">
+          <button style="
+            background-color:#28a745;
+            color:white;
+            border:none;
+            padding:12px 25px;
+            border-radius:8px;
+            font-size:16px;
+            cursor:pointer;">
+            📝 Buka Formulir Feedback
+          </button>
+        </a></div>""",
+        unsafe_allow_html=True,
+    )
+
+
+#  TAMPILKAN SEMUA FEEDBACK 
 st.divider()
 st.subheader("💬 Umpan Balik dari Pengguna")
 
 if not existing_data.empty:
     for _, fb in existing_data.iloc[::-1].iterrows():
-        with st.container():
-            st.markdown(f"**🧑 {fb['nama']}** | ⭐ {fb['rating']}/5 | *{fb['tanggal']}*")
-            st.markdown(f"_{fb['komentar']}_")
-            st.markdown("---")
+        st.markdown(f"**🧑 {fb['nama']}** | ⭐ {fb['rating']}/5 | *{fb['tanggal']}*")
+        st.markdown(f"_{fb['komentar']}_")
+        st.markdown("---")
 else:
-    st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
+    if connection_ok:
+        st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
+    else:
+        st.info("Masukan Anda akan muncul di sini setelah diisi melalui formulir Google Form.")
 
-# 🔍 Debug koneksi
-st.write("🔍 Testing koneksi Google Sheets...")
-try:
-    conn = st.connection("gsheets", type=GSheetsConnection)
-    df = conn.read(worksheet="Sheet1", ttl=5)
-    st.success("✅ Koneksi berhasil!")
-    st.dataframe(df)
-except Exception as e:
-    st.error(f"❌ Gagal terhubung: {e}")
+
+#   DEBUG KONEKSI (opsional)
+
+if connection_ok:
+    st.divider()
+    st.subheader("🔍 Debug Koneksi Google Sheets")
+    try:
+        df = conn.read(worksheet="Sheet1", ttl=5)
+        st.dataframe(df)
+    except Exception as e:
+        st.error(f"❌ Gagal membaca ulang Google Sheets: {e}")
+
 
 #  FOOTER
 
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
