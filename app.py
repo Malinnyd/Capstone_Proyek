@@ -639,19 +639,21 @@ else:
     st.info("Belum ada feedback. Jadilah yang pertama memberikan pendapat Anda!")
 
 # 🔍 Debug koneksi
-with st.expander("🔍 Debug Koneksi Google Sheets"):
-    try:
-        df_test = conn.read(worksheet="Sheet1")
-        st.success("✅ Koneksi ke Google Sheets BERHASIL!")
-        st.dataframe(df_test.head())
-    except Exception as e:
-        st.error(f"❌ Masih gagal membaca Google Sheets: {e}")
+st.write("🔍 Testing koneksi Google Sheets...")
+try:
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    df = conn.read(worksheet="Sheet1", ttl=5)
+    st.success("✅ Koneksi berhasil!")
+    st.dataframe(df)
+except Exception as e:
+    st.error(f"❌ Gagal terhubung: {e}")
 
 #  FOOTER
 
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
