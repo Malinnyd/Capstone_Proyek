@@ -577,25 +577,24 @@ with tabs[4]:
         st.link_button("🔗 Buka Jurnal", "https://doi.org/10.17503/jtcs.2021.34")
 
 
-# 🗣️ SECTION: FEEDBACK PENGGUNA
-
+# SECTION: FEEDBACK PENGGUNA
 
 st.subheader("🗣️ Feedback dari Pengguna")
+st.caption("Kami sangat menghargai pendapat Anda untuk meningkatkan aplikasi.")
 
+# Link csv dari spreadsheet
 CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRAXqqad-A5_bahUZuF615e2siCAW2jU-s5FEcAVfii9DsVLA8UTcxAN-5oiEMVsv3lHgAEmudsTIJg/pub?gid=2097029552&single=true&output=csv"
 
+#  MEMBACA DATA FEEDBACK
 try:
     df = pd.read_csv(CSV_URL)
-
-    # Sesuaikan nama kolom dengan file kamu
     df.columns = ["timestamp", "nama", "rating", "komentar"]
 
-    st.markdown("### 💬 Umpan Balik Terbaru")
-
+    # Menampilkan Semua feedback (berurut)
     for _, fb in df.iloc[::-1].iterrows():
         st.markdown(f"""
-        <div style='background-color:#1e1e1e; border-radius:8px; padding:12px; margin-bottom:10px;
-                    border-left:4px solid #00cc99; color:#ddd;'>
+        <div style='background-color:#1e1e1e; border-radius:10px; padding:12px; margin-bottom:10px;
+                    border-left:4px solid #00cc99; color:#e0e0e0;'>
             <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']} &nbsp;|&nbsp; 
             <i>{fb['timestamp']}</i></p>
             <p style='font-style:italic;'>{fb['komentar']}</p>
@@ -603,14 +602,15 @@ try:
         """, unsafe_allow_html=True)
 
 except Exception as e:
-    st.error(f"⚠️ Gagal membaca data feedback: {e}")
-    st.info("Pastikan link CSV dari 'Publish to the web' sudah benar.")
+    st.error("⚠️ Gagal membaca data feedback. Pastikan link CSV sudah dipublikasikan.")
+    st.text(e)
 
-# Tombol ke Google Form
+# TOMBOL KE GOOGLE FORM
 st.link_button(
-    "📨 Buka Formulir Feedback",
+    "📨 Berikan Feedback Anda di Sini",
     "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing"
 )
+
 
 
 
@@ -619,6 +619,7 @@ st.link_button(
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
