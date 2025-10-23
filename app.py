@@ -578,12 +578,10 @@ with tabs[4]:
 
 
 # 🗣️ SECTION: FEEDBACK PENGGUNA
-import streamlit as st
-import pandas as pd
+
 
 st.subheader("🗣️ Feedback dari Pengguna")
 
-# Gunakan URL CSV dari hasil 'Publish to the web'
 CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRAXqqad-A5_bahUZuF615e2siCAW2jU-s5FEcAVfii9DsVLA8UTcxAN-5oiEMVsv3lHgAEmudsTIJg/pub?gid=2097029552&single=true&output=csv"
 
 try:
@@ -623,6 +621,7 @@ st.link_button(
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
