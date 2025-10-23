@@ -91,14 +91,12 @@ streamlit run app.py
 Pada saat pertama kali dijalankan, sistem akan menampilkan pesan “Mengunduh model…” — ini normal karena aplikasi sedang mengambil model .pkl dari AWS S3.
 
 📂 Struktur Direktori
-Capstone_Proyek/
-│
-├── app.py                # Aplikasi utama Streamlit
-├── lookup_tabel.csv      # Dataset referensi lokasi & komoditas
-├── .gitignore            # Mengabaikan file model besar & env
-├── Model_ML/             # Notebook pelatihan & Dataset
-├── requirements.txt      # Library dependensi
-└── README.md             # Dokumentasi utama
+app.py                # Aplikasi utama Streamlit
+lookup_tabel.csv      # Dataset referensi lokasi & komoditas
+.gitignore            # Mengabaikan file model besar & env
+Model_ML/             # Notebook pelatihan & Dataset
+requirements.txt      # Library dependensi
+README.md             # Dokumentasi utama
 
 💡 Catatan Tambahan
 
