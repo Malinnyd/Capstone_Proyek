@@ -578,27 +578,37 @@ with tabs[4]:
 
 
 # 🗣️ SECTION: FEEDBACK PENGGUNA
-
 import streamlit as st
 import pandas as pd
-from streamlit_gsheets import GSheetsConnection
 
 st.subheader("🗣️ Feedback dari Pengguna")
 
-try:
-    conn = st.connection("gsheets", type=GSheetsConnection)
-    df = conn.read(worksheet="Form Responses 1", ttl=5)
+# Gunakan URL CSV dari hasil 'Publish to the web'
+CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRAXqqad-A5_bahUZuF615e2siCAW2jU-s5FEcAVfii9DsVLA8UTcxAN-5oiEMVsv3lHgAEmudsTIJg/pub?gid=2097029552&single=true&output=csv"
 
-    if df is not None and not df.empty:
-        # ubah nama kolom agar seragam
-        df.columns = ["timestamp", "nama", "rating", "komentar"]
-        st.success("✅ Data feedback berhasil dimuat.")
-    else:
-        df = pd.DataFrame(columns=["timestamp", "nama", "rating", "komentar"])
-        st.info("Belum ada feedback.")
+try:
+    df = pd.read_csv(CSV_URL)
+
+    # Sesuaikan nama kolom dengan file kamu
+    df.columns = ["timestamp", "nama", "rating", "komentar"]
+
+    st.success("✅ Data feedback berhasil dimuat.")
+
+    st.markdown("### 💬 Umpan Balik Terbaru")
+
+    for _, fb in df.iloc[::-1].iterrows():
+        st.markdown(f"""
+        <div style='background-color:#1e1e1e; border-radius:8px; padding:12px; margin-bottom:10px;
+                    border-left:4px solid #00cc99; color:#ddd;'>
+            <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']} &nbsp;|&nbsp; 
+            <i>{fb['timestamp']}</i></p>
+            <p style='font-style:italic;'>{fb['komentar']}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
 except Exception as e:
-    st.error(f"Gagal membaca data dari Google Sheets: {e}")
-    df = pd.DataFrame(columns=["timestamp", "nama", "rating", "komentar"])
+    st.error(f"⚠️ Gagal membaca data feedback: {e}")
+    st.info("Pastikan link CSV dari 'Publish to the web' sudah benar.")
 
 # Tombol ke Google Form
 st.link_button(
@@ -606,18 +616,6 @@ st.link_button(
     "https://docs.google.com/forms/d/e/1FAIpQLSeJxhbW5-V961ZBJcrE19TITUBQHUWzdXgyLsZzYEOnjc8HmQ/viewform?usp=sharing"
 )
 
-# Tampilkan feedback
-if not df.empty:
-    st.markdown("<h4>💬 Umpan Balik Terbaru</h4>", unsafe_allow_html=True)
-    for _, fb in df.iloc[::-1].iterrows():
-        st.markdown(f"""
-        <div style='background-color:#222; border-radius:8px; padding:10px; margin-bottom:10px; border-left:3px solid #00FFCC;'>
-          <p><b>🧑 {fb['nama']}</b> &nbsp;|&nbsp; ⭐ {fb['rating']} &nbsp;|&nbsp; <i>{fb['timestamp']}</i></p>
-          <p style='color:#CCCCCC; font-style:italic;'>{fb['komentar']}</p>
-        </div>
-        """, unsafe_allow_html=True)
-else:
-    st.info("Belum ada feedback untuk ditampilkan.")
 
 
 #  FOOTER
@@ -625,6 +623,7 @@ else:
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
