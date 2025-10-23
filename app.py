@@ -590,8 +590,6 @@ try:
     # Sesuaikan nama kolom dengan file kamu
     df.columns = ["timestamp", "nama", "rating", "komentar"]
 
-    st.success("✅ Data feedback berhasil dimuat.")
-
     st.markdown("### 💬 Umpan Balik Terbaru")
 
     for _, fb in df.iloc[::-1].iterrows():
@@ -621,6 +619,7 @@ st.link_button(
 
 st.divider()
 st.caption("© 2025 TUMBUH | Dikembangkan oleh **Malinny Debra (DB8-PI034) - B25B8M080** •DICODING MACHINE LEARNING BOOTCAMP BATCH 8 • Machine Learning Capstone 🌿")
+
 
 
 
