@@ -120,7 +120,9 @@ AWS S3 Python
 GOOGLE COLAB
 
 
-Kontributor
+
+
+
 
 Malinny Debra (DB8-PI034)
 📧 malinny.debra@email.com
